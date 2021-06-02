@@ -2,7 +2,6 @@ import tkinter
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg)
 import matplotlib.pyplot as plt
-
 window = tkinter.Tk()
 window.geometry('1360x768')
 window.title("Курсовая Гребенкин")
@@ -31,6 +30,8 @@ def diagram_create():
         par_entry8.get(): val_entry8.get(),
         par_entry9.get(): val_entry9.get(),
         par_entry10.get(): val_entry10.get(), }
+    for field in window.fields:
+        par_val_dict[field['parentry'].get()] = field['varentry'].get()
     del_list = []
 
     def get_str(val):
@@ -145,7 +146,27 @@ val_entry9.grid(column=6, row=10)
 val_entry10 = tkinter.Entry(window, width=10)
 val_entry10.grid(column=6, row=11)
 
+window.fields = []
+length = 11
+
+
+def add_field():
+    global length
+    window.fields.append({})
+    length += 1
+    window.fields[length-12]['par'] = tkinter.Label(window, text='Введите название {0} парамметра'.format(str(length-1)), width=50)
+    window.fields[length-12]['par'].grid(row=length+1, column=0)
+    window.fields[length-12]['parentry'] = tkinter.Entry(window, width=50)
+    window.fields[length-12]['parentry'].grid(row=length+1, column=2)
+    window.fields[length-12]['var'] = tkinter.Label(window, text='Введите значение {0} парамметра'.format(str(length-1)), width=50)
+    window.fields[length-12]['var'].grid(row=length+1, column=4)
+    window.fields[length-12]['varentry'] = tkinter.Entry(window, width=50)
+    window.fields[length-12]['varentry'].grid(row=length+1, column=6)
+
+
 create_diagram = tkinter.Button(window, text='Создать диаграмму', command=diagram_create, )
-create_diagram.grid(column=2, row=12)
+create_diagram.grid(column=4, row=0)
+new_field = tkinter.Button(window, text='Добавить параметр', command=add_field, )
+new_field.grid(column=2, row=0)
 
 window.mainloop()
