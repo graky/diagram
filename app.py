@@ -2,12 +2,14 @@ import tkinter
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg)
 import matplotlib.pyplot as plt
+# создание основного окна
 window = tkinter.Tk()
 window.geometry('1360x768')
 window.title("Курсовая Гребенкин")
 
 
-def diagram_create():
+def diagram_create():  # функция создания диаграммы
+    # создание второго окна
     diagram_window = tkinter.Toplevel(window)
     diagram_window.title('Кольцевая параметрическая секторная диаграмма')
     diagram_window.geometry('800x600')
@@ -16,10 +18,10 @@ def diagram_create():
     my_canvas = tkinter.Canvas(main_frame)
     my_canvas.pack(side=tkinter.LEFT, fill=tkinter.BOTH, expand=1)
     my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion=my_canvas.bbox("all")))
-    diagran_frame = tkinter.Frame(my_canvas)
-    my_canvas.create_window((0, 0), window=diagran_frame, anchor="nw")
+    diagram_frame = tkinter.Frame(my_canvas)
+    my_canvas.create_window((0, 0), window=diagram_frame, anchor="nw")
     diagram_name = main_entry.get()
-    par_val_dict = {
+    par_val_dict = {                # создание словаря с наименованиями и значениями параметров
         par_entry1.get(): val_entry1.get(),
         par_entry2.get(): val_entry2.get(),
         par_entry3.get(): val_entry3.get(),
@@ -30,12 +32,14 @@ def diagram_create():
         par_entry8.get(): val_entry8.get(),
         par_entry9.get(): val_entry9.get(),
         par_entry10.get(): val_entry10.get(), }
-    for field in window.fields:
+    for field in window.fields:  # добавление дополнительных параметров
         par_val_dict[field['parentry'].get()] = field['varentry'].get()
     del_list = []
 
-    def get_str(val):
+    def get_str(val):  # функция для фильтраци пустых и неправильных значений параметров
         flag = False
+        if not val:
+            flag = True
         for lit in val:
             if lit not in '0123456789':
                 flag = True
@@ -47,24 +51,24 @@ def diagram_create():
     for key_del in del_list:
         del par_val_dict[key_del]
     plt.figure(figsize=(6, 6))
-    plt.pie([int(val) for val in par_val_dict.values()], labels=par_val_dict.keys())
+    plt.pie([int(val) for val in par_val_dict.values()], labels=par_val_dict.keys())  # создание диаграммы
     my_circle = plt.Circle((0, 0), 0.7, color='white')
     p = plt.gcf()
     p.gca().add_artist(my_circle)
 
-    canvas = FigureCanvasTkAgg(p, master=diagran_frame)
+    canvas = FigureCanvasTkAgg(p, master=diagram_frame)
     canvas.draw()
-    name = tkinter.Label(diagran_frame, text=diagram_name, width=50, )
+    name = tkinter.Label(diagram_frame, text=diagram_name, width=50, )
     name.grid(column=0, row=0, padx=100)
-    canvas.get_tk_widget().grid(row=1, column=0, sticky='e')
+    canvas.get_tk_widget().grid(row=1, column=0, sticky='e')  # отображение диаграммы
 
 
-main_info = tkinter.Label(window, text='Введите название диаграммы', width=50, )
+main_info = tkinter.Label(window, text='Введите название диаграммы', width=50, )  # поле ввода названия диаграммы
 main_info.grid(column=0, row=0, pady=0)
 main_entry = tkinter.Entry(window, width=50)
 main_entry.grid(column=0, row=1, )
 
-
+# поля ввода именований и значений параметров
 par_1 = tkinter.Label(window, text='Введите название первого парамметра', width=50, justify='left')
 par_1.grid(column=0, row=2)
 par_2 = tkinter.Label(window, text='Введите название второго парамметра', width=50, justify='left')
@@ -150,7 +154,7 @@ window.fields = []
 length = 11
 
 
-def add_field():
+def add_field(): # функция добавления дополнительных полей
     global length
     window.fields.append({})
     length += 1
@@ -163,9 +167,10 @@ def add_field():
     window.fields[length-12]['varentry'] = tkinter.Entry(window, width=50)
     window.fields[length-12]['varentry'].grid(row=length+1, column=6)
 
-
+# кнопка создания диаграммы
 create_diagram = tkinter.Button(window, text='Создать диаграмму', command=diagram_create, )
 create_diagram.grid(column=4, row=0)
+# кнопка добавления дополнительного параметра
 new_field = tkinter.Button(window, text='Добавить параметр', command=add_field, )
 new_field.grid(column=2, row=0)
 
