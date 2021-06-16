@@ -50,8 +50,11 @@ def diagram_create():  # функция создания диаграммы
             del_list.append(key)
     for key_del in del_list:
         del par_val_dict[key_del]
+    param_list = []
+    for key in par_val_dict.keys():
+        param_list.append(key + ' ' + str(par_val_dict[key]))
     plt.figure(figsize=(6, 6))
-    plt.pie([int(val) for val in par_val_dict.values()], labels=par_val_dict.keys())  # создание диаграммы
+    plt.pie([int(val) for val in par_val_dict.values()], labels=param_list)  # создание диаграммы
     my_circle = plt.Circle((0, 0), 0.7, color='white')
     p = plt.gcf()
     p.gca().add_artist(my_circle)
